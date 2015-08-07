@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ToggleButton;
 
 
@@ -39,6 +40,43 @@ public class MainActivity extends ActionBarActivity {
                 t.printStackTrace();
 
             }
+        }
+    }
+
+    private void turnOnFlashlight(){
+        if (!isFlashOn) {
+            if (cam == null || camParm == null) { getCamera(); }
+        }
+
+        camParm = cam.getParameters();
+        camParm.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        cam.setParameters(camParm);
+        cam.startPreview();
+        isFlashOn = true;
+    }
+
+    private void turnOffFlashlight(){
+        if (isFlashOn) {
+            if (cam == null || camParm == null) { return; }
+        }
+
+        camParm = cam.getParameters();
+        camParm.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        cam.setParameters(camParm);
+        cam.stopPreview();
+        cam.release();
+        cam = null;
+        isFlashOn = false;
+    }
+
+    public void onFlashlightClick (View v) {
+        tbFlashlight = (ToggleButton)v;
+        if(isFlashOn){
+            turnOffFlashlight();
+            tbFlashlight.setTextOff("Off");
+        } else {
+            turnOnFlashlight();
+            tbFlashlight.setTextOn("On");
         }
     }
 
